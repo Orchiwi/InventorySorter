@@ -4,6 +4,7 @@
   "package": "fr.horizonsmp.inventorysorter.mixin.client",
   "compatibilityLevel": "JAVA_25",
   "client": [
+    "AbstractContainerScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
