@@ -11,8 +11,9 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 public final class ScreenAttacher {
 
     private static final int RIGHT_MARGIN = 4;
-    private static final int Y_OFFSET_TOP = 4;
-    private static final int Y_OFFSET_PLAYER = 64;
+    private static final int CONTAINER_TOOLBAR_Y_OFFSET = 4;
+    private static final int PLAYER_TOOLBAR_Y_FROM_BOTTOM = 95;
+    private static final int PLAYER_ONLY_TOOLBAR_Y_FROM_BOTTOM = 95;
 
     private ScreenAttacher() {}
 
@@ -37,19 +38,23 @@ public final class ScreenAttacher {
         int baseX = leftPos + imageWidth - SortToolbarFactory.TOOLBAR_WIDTH - RIGHT_MARGIN;
 
         if (profile.hasContainer()) {
-            int containerY = topPos + Y_OFFSET_TOP;
-            for (AbstractWidget widget : SortToolbarFactory.create(baseX, containerY, profile, SortToolbarFactory.Target.CONTAINER)) {
-                Screens.getWidgets(screen).add(widget);
-            }
-            int playerY = topPos + imageHeight - Y_OFFSET_PLAYER;
-            for (AbstractWidget widget : SortToolbarFactory.create(baseX, playerY, profile, SortToolbarFactory.Target.PLAYER)) {
-                Screens.getWidgets(screen).add(widget);
-            }
+            int containerY = topPos + CONTAINER_TOOLBAR_Y_OFFSET;
+            attachToolbar(screen, baseX, containerY, profile, SortToolbarFactory.Target.CONTAINER);
+
+            int playerY = topPos + imageHeight - PLAYER_TOOLBAR_Y_FROM_BOTTOM;
+            attachToolbar(screen, baseX, playerY, profile, SortToolbarFactory.Target.PLAYER);
         } else {
-            int playerY = topPos + Y_OFFSET_TOP;
-            for (AbstractWidget widget : SortToolbarFactory.create(baseX, playerY, profile, SortToolbarFactory.Target.PLAYER)) {
-                Screens.getWidgets(screen).add(widget);
-            }
+            int playerY = topPos + imageHeight - PLAYER_ONLY_TOOLBAR_Y_FROM_BOTTOM;
+            attachToolbar(screen, baseX, playerY, profile, SortToolbarFactory.Target.PLAYER);
+        }
+    }
+
+    private static void attachToolbar(AbstractContainerScreen<?> screen,
+                                       int x, int y,
+                                       ContainerProfile profile,
+                                       SortToolbarFactory.Target target) {
+        for (AbstractWidget widget : SortToolbarFactory.create(x, y, profile, target)) {
+            Screens.getWidgets(screen).add(widget);
         }
     }
 }

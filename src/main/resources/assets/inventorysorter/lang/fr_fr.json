@@ -9,7 +9,7 @@
 
   "inventorysorter.method.horizontal": "Horizontal",
   "inventorysorter.method.vertical": "Vertical",
-  "inventorysorter.method.grouped": "Groupé",
+  "inventorysorter.method.compact": "Linéaire",
 
   "inventorysorter.button.criterion.title": "Tri : %s",
   "inventorysorter.button.criterion.hint": "Cliquez pour changer de critère",

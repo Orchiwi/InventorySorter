@@ -1,6 +1,5 @@
 package fr.horizonsmp.inventorysorter.client.container;
 
-import fr.horizonsmp.inventorysorter.client.sort.SlotPermutation;
 import fr.horizonsmp.inventorysorter.client.sort.Sorter;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -18,8 +17,8 @@ public final class SlotMover {
         return menu != null && menu.getCarried().isEmpty();
     }
 
-    public static void execute(LocalPlayer player, List<Sorter.SourceTarget> moves) {
-        if (moves.isEmpty()) return;
+    public static void execute(LocalPlayer player, List<Sorter.ClickChain> chains) {
+        if (chains.isEmpty()) return;
         Minecraft client = Minecraft.getInstance();
         MultiPlayerGameMode gameMode = client.gameMode;
         if (gameMode == null) return;
@@ -28,9 +27,8 @@ public final class SlotMover {
         if (menu == null || !menu.getCarried().isEmpty()) return;
 
         int syncId = menu.containerId;
-
-        for (List<Integer> chain : SlotPermutation.decompose(moves)) {
-            for (int slot : chain) {
+        for (Sorter.ClickChain chain : chains) {
+            for (int slot : chain.slots()) {
                 gameMode.handleContainerInput(syncId, slot, 0, ContainerInput.PICKUP, player);
             }
         }

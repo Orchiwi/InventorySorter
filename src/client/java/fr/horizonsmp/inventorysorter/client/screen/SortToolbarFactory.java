@@ -15,20 +15,21 @@ import net.minecraft.network.chat.MutableComponent;
 
 public final class SortToolbarFactory {
 
-    public static final int BUTTON_WIDTH = 18;
-    public static final int BUTTON_HEIGHT = 18;
+    public static final int BUTTON_SIZE = 12;
     public static final int BUTTON_GAP = 1;
-    public static final int TOOLBAR_WIDTH = BUTTON_WIDTH * 3 + BUTTON_GAP * 2;
+    public static final int TOOLBAR_WIDTH = BUTTON_SIZE * 4 + BUTTON_GAP * 3;
 
     public enum Target { CONTAINER, PLAYER }
 
     private SortToolbarFactory() {}
 
     public static List<AbstractWidget> create(int x, int y, ContainerProfile profile, Target target) {
-        List<AbstractWidget> widgets = new ArrayList<>(3);
+        List<AbstractWidget> widgets = new ArrayList<>(4);
+        int step = BUTTON_SIZE + BUTTON_GAP;
         widgets.add(buildCriterionButton(x, y));
-        widgets.add(buildMethodButton(x + BUTTON_WIDTH + BUTTON_GAP, y));
-        widgets.add(buildSortButton(x + 2 * (BUTTON_WIDTH + BUTTON_GAP), y, profile, target));
+        widgets.add(buildSortButton(x + step, y, profile, target, SortMethod.VERTICAL));
+        widgets.add(buildSortButton(x + 2 * step, y, profile, target, SortMethod.COMPACT));
+        widgets.add(buildSortButton(x + 3 * step, y, profile, target, SortMethod.HORIZONTAL));
         return widgets;
     }
 
@@ -36,37 +37,29 @@ public final class SortToolbarFactory {
         SortCriterion current = ClientState.get().config().currentCriterion();
         Button button = Button.builder(criterionGlyph(current), b -> cycleCriterion(b))
             .pos(x, y)
-            .size(BUTTON_WIDTH, BUTTON_HEIGHT)
+            .size(BUTTON_SIZE, BUTTON_SIZE)
             .tooltip(criterionTooltip(current))
             .build();
         return button;
     }
 
-    private static Button buildMethodButton(int x, int y) {
-        SortMethod current = ClientState.get().config().currentMethod();
-        Button button = Button.builder(methodGlyph(current), b -> cycleMethod(b))
+    private static Button buildSortButton(int x, int y, ContainerProfile profile, Target target, SortMethod method) {
+        return Button.builder(methodGlyph(method), b -> applySort(profile, target, method))
             .pos(x, y)
-            .size(BUTTON_WIDTH, BUTTON_HEIGHT)
-            .tooltip(methodTooltip(current))
+            .size(BUTTON_SIZE, BUTTON_SIZE)
+            .tooltip(methodTooltip(method))
             .build();
-        return button;
     }
 
-    private static Button buildSortButton(int x, int y, ContainerProfile profile, Target target) {
-        return Button.builder(Component.literal("✓"), b -> {
-                if (target == Target.CONTAINER) {
-                    SortAction.runOnContainer(profile);
-                } else {
-                    boolean includeHotbar = ClientState.get().config().includeHotbar();
-                    SortAction.runOnPlayerMain(profile, includeHotbar);
-                }
-            })
-            .pos(x, y)
-            .size(BUTTON_WIDTH, BUTTON_HEIGHT)
-            .tooltip(Tooltip.create(
-                Component.translatable("inventorysorter.button.sort.title"),
-                Component.translatable("inventorysorter.button.sort.hint")))
-            .build();
+    private static void applySort(ContainerProfile profile, Target target, SortMethod method) {
+        ClientState state = ClientState.get();
+        state.update(cfg -> cfg.withMethod(method));
+        if (target == Target.CONTAINER) {
+            SortAction.runOnContainer(profile);
+        } else {
+            boolean includeHotbar = state.config().includeHotbar();
+            SortAction.runOnPlayerMain(profile, includeHotbar);
+        }
     }
 
     private static void cycleCriterion(Button button) {
@@ -81,18 +74,6 @@ public final class SortToolbarFactory {
         button.setTooltip(criterionTooltip(holder[0]));
     }
 
-    private static void cycleMethod(Button button) {
-        ClientState state = ClientState.get();
-        SortMethod[] holder = new SortMethod[1];
-        state.update(cfg -> {
-            SortMethod next = cfg.currentMethod().next();
-            holder[0] = next;
-            return cfg.withMethod(next);
-        });
-        button.setMessage(methodGlyph(holder[0]));
-        button.setTooltip(methodTooltip(holder[0]));
-    }
-
     private static MutableComponent criterionGlyph(SortCriterion criterion) {
         return Component.literal(switch (criterion) {
             case NAME -> "N";
@@ -104,9 +85,9 @@ public final class SortToolbarFactory {
 
     private static MutableComponent methodGlyph(SortMethod method) {
         return Component.literal(switch (method) {
-            case HORIZONTAL -> "H";
-            case VERTICAL -> "V";
-            case GROUPED -> "G";
+            case VERTICAL -> "↕";
+            case COMPACT -> "≡";
+            case HORIZONTAL -> "↔";
         });
     }
 

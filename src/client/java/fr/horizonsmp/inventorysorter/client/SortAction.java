@@ -43,9 +43,9 @@ public final class SortAction {
 
         List<ItemStack> current = readStacks(menu, region);
         ModConfigSnapshot snapshot = ModConfigSnapshot.current();
-        List<Sorter.SourceTarget> moves = Sorter.plan(region, current, snapshot.criterion(), snapshot.method());
-        SlotMover.execute(player, moves);
-        return !moves.isEmpty();
+        List<Sorter.ClickChain> chains = Sorter.plan(region, current, snapshot.criterion(), snapshot.method());
+        SlotMover.execute(player, chains);
+        return !chains.isEmpty();
     }
 
     private static List<ItemStack> readStacks(AbstractContainerMenu menu, Sorter.Region region) {

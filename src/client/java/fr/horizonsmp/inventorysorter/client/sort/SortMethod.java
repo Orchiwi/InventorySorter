@@ -3,7 +3,7 @@ package fr.horizonsmp.inventorysorter.client.sort;
 public enum SortMethod {
     HORIZONTAL,
     VERTICAL,
-    GROUPED;
+    COMPACT;
 
     public SortMethod next() {
         SortMethod[] values = values();

@@ -6,11 +6,13 @@ sorting is performed entirely client-side via standard slot clicks.
 
 ## Features
 
-- Three sort buttons attached above every supported inventory screen:
+- Four sort buttons attached above every supported inventory screen:
   - **Criterion cycle** — switch between *Name*, *Item type*, *Creative category*,
     *Rarity + Quantity*.
-  - **Layout cycle** — switch between *Horizontal*, *Vertical*, *Grouped*.
-  - **Sort** — apply the current criterion and layout to that inventory.
+  - **Vertical / Compact / Horizontal** — each click immediately applies its layout
+    with the current criterion. *Compact* preserves the existing order and just
+    fills empty gaps; *Vertical* and *Horizontal* re-arrange the items after sorting
+    by the active criterion.
 - Configurable keybind (default `R`) that triggers a sort on the focused
   inventory, or on the player inventory if no screen is open.
 - The player hotbar is preserved by default so the item in hand never moves.

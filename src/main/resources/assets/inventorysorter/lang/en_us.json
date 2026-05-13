@@ -9,7 +9,7 @@
 
   "inventorysorter.method.horizontal": "Horizontal",
   "inventorysorter.method.vertical": "Vertical",
-  "inventorysorter.method.grouped": "Grouped",
+  "inventorysorter.method.compact": "Compact",
 
   "inventorysorter.button.criterion.title": "Sort by: %s",
   "inventorysorter.button.criterion.hint": "Click to cycle through criteria",
