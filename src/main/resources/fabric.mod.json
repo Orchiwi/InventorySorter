@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "inventorysorter",
+  "version": "${version}",
+  "name": "InventorySorter",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/inventorysorter/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-datagen": [
+      "fr.horizonsmp.inventorysorter.client.InventorysorterDataGenerator"
+    ],
+    "client": [
+      "fr.horizonsmp.inventorysorter.client.InventorysorterClient"
+    ],
+    "main": [
+      "fr.horizonsmp.inventorysorter.Inventorysorter"
+    ]
+  },
+  "mixins": [
+    "inventorysorter.mixins.json",
+    {
+      "config": "inventorysorter.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
