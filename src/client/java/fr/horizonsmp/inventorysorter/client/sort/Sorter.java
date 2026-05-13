@@ -70,21 +70,26 @@ public final class Sorter {
                                                   int[] traversal) {
         List<List<ItemStack>> groups = groupByItem(sortedStacks);
         int totalItems = sortedStacks.size();
-        int totalGaps = Math.max(0, groups.size() - 1);
-        boolean useGaps = (totalItems + totalGaps) <= region.size();
+        int trailingGaps = 0;
+        for (int i = 0; i < groups.size() - 1; i++) {
+            if (groups.get(i).size() > 1) trailingGaps++;
+        }
+        boolean useGaps = (totalItems + trailingGaps) <= region.size();
 
         int cursor = 0;
         int total = traversal.length;
         for (int g = 0; g < groups.size(); g++) {
-            if (g > 0 && useGaps) {
-                cursor++;
-                if (cursor >= total) return target;
-            }
-            for (ItemStack stack : groups.get(g)) {
+            List<ItemStack> group = groups.get(g);
+            for (ItemStack stack : group) {
                 if (cursor >= total) return target;
                 int slotAbs = traversal[cursor];
                 target.set(slotAbs - region.slotStart(), stack);
                 cursor++;
+            }
+            boolean hasNext = g < groups.size() - 1;
+            if (hasNext && useGaps && group.size() > 1) {
+                cursor++;
+                if (cursor >= total) return target;
             }
         }
         return target;
