@@ -13,8 +13,6 @@ sorting is performed entirely client-side via standard slot clicks.
   - **Sort** — apply the current criterion and layout to that inventory.
 - Configurable keybind (default `R`) that triggers a sort on the focused
   inventory, or on the player inventory if no screen is open.
-- Partial stacks are merged before sorting (e.g. two 32-cobblestone stacks
-  become one 64-cobblestone stack).
 - The player hotbar is preserved by default so the item in hand never moves.
 - Items with NBT (enchanted books, potions, named items, player heads) are
   grouped by item type and sub-sorted by readable NBT signature — every

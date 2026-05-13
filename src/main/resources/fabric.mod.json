@@ -24,9 +24,6 @@
     ],
     "main": [
       "fr.horizonsmp.inventorysorter.Inventorysorter"
-    ],
-    "modmenu": [
-      "fr.horizonsmp.inventorysorter.client.modmenu.ModMenuApiImpl"
     ]
   },
   "mixins": [
