@@ -33,23 +33,29 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   which made the previous cycle-decomposition non-idempotent (clicking
   Sort repeatedly produced different layouts). The new approach is
   idempotent: a second click on Sort changes nothing.
-- Reworked the three layout methods so they match the user-supplied
-  reference behaviour:
-  - **HORIZONTAL** sorts the stacks by the active criterion, groups
-    consecutive same-item stacks, and lays them out row by row with a
-    single empty slot separating distinct types.
-  - **VERTICAL** is the same idea but the traversal walks columns first
-    (top-to-bottom, then next column), so each item type forms a
-    vertical cluster.
-  - **COMPACT** (labelled *Linéaire* in French, *Compact* in English)
-    sorts by the active criterion and packs the stacks contiguously
-    with no separator slots, matching the Inventory Tweaks DEFAULT
-    behaviour.
+- Reworked the three layout methods so they match the Inventory Tweaks
+  classic algorithm (a port of
+  `invtweaks.InvTweaksHandlerSorting.computeLineSortingRules` and
+  `defaultSorting`):
+  - **HORIZONTAL** assigns each item type its own rectangle inside the
+    grid. Base rectangle width is `rowSize / ceil(distinctTypes / rows)`
+    and the rectangle grows along the line axis (then perpendicular)
+    when a type has more stacks than the base size can hold. The last
+    rectangle on a row stretches by one slot to consume any single-slot
+    leftover. Stacks of the same type are laid out row-major inside
+    their rectangle. Types whose stack count exceeds the line size are
+    processed first so they consume contiguous space before smaller
+    types.
+  - **VERTICAL** uses the same algorithm with the axes swapped: each
+    type's rectangle is one column wide by `spaceHeight` tall, the
+    cursor walks columns first, and the rectangle stack ordering is
+    column-major.
+  - **COMPACT** (UI label *Linéaire* / *Compact*) skips the rectangle
+    phase entirely and lays the sorted stacks out contiguously, which is
+    Inventory Tweaks' DEFAULT method.
 
-  All three modes sort by the active criterion first; the difference is
-  purely in how the sorted list is laid out across the slot region.
-  Gaps are dropped automatically when the items would not otherwise fit
-  in the region.
+  All three modes sort the per-type stacks by the active criterion
+  before assigning slots.
 
 ### Deferred
 

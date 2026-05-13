@@ -10,10 +10,11 @@ sorting is performed entirely client-side via standard slot clicks.
   - **Criterion cycle** — switch between *Name*, *Item type*, *Creative category*,
     *Rarity + Quantity*.
   - **Vertical / Compact / Horizontal** — each click immediately applies its layout
-    with the current criterion. *Horizontal* groups same-item stacks together row
-    by row with a 1-slot separator between distinct item types; *Vertical* does
-    the same but column by column; *Compact* sorts and packs the stacks
-    contiguously with no separators.
+    with the current criterion. *Horizontal* and *Vertical* are ports of the
+    Inventory Tweaks classic rectangle layout: each item type gets its own
+    contiguous rectangle inside the grid, and the rectangle grows when a type has
+    too many stacks to fit the base size. *Compact* sorts the stacks and packs
+    them tightly without any rectangle structure.
 - Configurable keybind (default `R`) that triggers a sort on the focused
   inventory, or on the player inventory if no screen is open.
 - The player hotbar is preserved by default so the item in hand never moves.
