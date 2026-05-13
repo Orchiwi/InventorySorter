@@ -33,6 +33,23 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   which made the previous cycle-decomposition non-idempotent (clicking
   Sort repeatedly produced different layouts). The new approach is
   idempotent: a second click on Sort changes nothing.
+- Reworked the three layout methods so they match the user-supplied
+  reference behaviour:
+  - **HORIZONTAL** sorts the stacks by the active criterion, groups
+    consecutive same-item stacks, and lays them out row by row with a
+    single empty slot separating distinct types.
+  - **VERTICAL** is the same idea but the traversal walks columns first
+    (top-to-bottom, then next column), so each item type forms a
+    vertical cluster.
+  - **COMPACT** (labelled *Linéaire* in French, *Compact* in English)
+    sorts by the active criterion and packs the stacks contiguously
+    with no separator slots, matching the Inventory Tweaks DEFAULT
+    behaviour.
+
+  All three modes sort by the active criterion first; the difference is
+  purely in how the sorted list is laid out across the slot region.
+  Gaps are dropped automatically when the items would not otherwise fit
+  in the region.
 
 ### Deferred
 

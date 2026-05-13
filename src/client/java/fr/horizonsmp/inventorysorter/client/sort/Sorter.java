@@ -13,12 +13,6 @@ public final class Sorter {
         }
     }
 
-    /**
-     * A single click sequence (chain of slot indices to click in order). For our PICKUP-based
-     * swap protocol a sequence is either 2 slots (pickup source, deposit into empty target) or
-     * 3 slots (pickup target, pickup source — which swaps because items differ, pickup target
-     * again to deposit). Same-content swaps are filtered out before they reach this list.
-     */
     public record ClickChain(int[] slots) {}
 
     private Sorter() {}
@@ -31,20 +25,9 @@ public final class Sorter {
             throw new IllegalArgumentException(
                 "currentInRange size " + currentInRange.size() + " != region size " + region.size());
         }
-        List<ItemStack> target = computeTarget(region, currentInRange, criterion, method);
+        List<ItemStack> sortedStacks = sortNonEmpty(currentInRange, criterion);
+        List<ItemStack> target = layoutTarget(region, sortedStacks, method);
         return selectionSort(region, currentInRange, target);
-    }
-
-    private static List<ItemStack> computeTarget(Region region,
-                                                  List<ItemStack> current,
-                                                  SortCriterion criterion,
-                                                  SortMethod method) {
-        if (method == SortMethod.COMPACT) {
-            return compactTarget(region, current);
-        }
-        List<ItemStack> sortedStacks = sortNonEmpty(current, criterion);
-        List<Integer> targetSlots = layoutSlots(region, sortedStacks.size(), method);
-        return buildTargetArray(region, sortedStacks, targetSlots);
     }
 
     private static List<ItemStack> sortNonEmpty(List<ItemStack> current, SortCriterion criterion) {
@@ -57,58 +40,91 @@ public final class Sorter {
         return sorted;
     }
 
-    private static List<ItemStack> compactTarget(Region region, List<ItemStack> current) {
+    private static List<ItemStack> layoutTarget(Region region,
+                                                 List<ItemStack> sortedStacks,
+                                                 SortMethod method) {
         List<ItemStack> target = new ArrayList<>(region.size());
-        for (ItemStack stack : current) {
-            if (!stack.isEmpty()) target.add(stack);
-        }
-        while (target.size() < region.size()) {
-            target.add(ItemStack.EMPTY);
-        }
-        return target;
-    }
+        for (int i = 0; i < region.size(); i++) target.add(ItemStack.EMPTY);
 
-    private static List<Integer> layoutSlots(Region region, int n, SortMethod method) {
-        List<Integer> result = new ArrayList<>(n);
+        if (sortedStacks.isEmpty()) return target;
+
         return switch (method) {
-            case HORIZONTAL -> horizontalLayout(region, n);
-            case VERTICAL -> verticalLayout(region, n);
-            case COMPACT -> horizontalLayout(region, n);
+            case COMPACT -> compactLayout(region, sortedStacks, target);
+            case HORIZONTAL -> groupedLayout(region, sortedStacks, target, rowMajorTraversal(region));
+            case VERTICAL -> groupedLayout(region, sortedStacks, target, columnMajorTraversal(region));
         };
     }
 
-    private static List<Integer> horizontalLayout(Region region, int n) {
-        List<Integer> result = new ArrayList<>(n);
+    private static List<ItemStack> compactLayout(Region region,
+                                                  List<ItemStack> sortedStacks,
+                                                  List<ItemStack> target) {
+        for (int i = 0; i < sortedStacks.size() && i < region.size(); i++) {
+            target.set(i, sortedStacks.get(i));
+        }
+        return target;
+    }
+
+    private static List<ItemStack> groupedLayout(Region region,
+                                                  List<ItemStack> sortedStacks,
+                                                  List<ItemStack> target,
+                                                  int[] traversal) {
+        List<List<ItemStack>> groups = groupByItem(sortedStacks);
+        int totalItems = sortedStacks.size();
+        int totalGaps = Math.max(0, groups.size() - 1);
+        boolean useGaps = (totalItems + totalGaps) <= region.size();
+
+        int cursor = 0;
+        int total = traversal.length;
+        for (int g = 0; g < groups.size(); g++) {
+            if (g > 0 && useGaps) {
+                cursor++;
+                if (cursor >= total) return target;
+            }
+            for (ItemStack stack : groups.get(g)) {
+                if (cursor >= total) return target;
+                int slotAbs = traversal[cursor];
+                target.set(slotAbs - region.slotStart(), stack);
+                cursor++;
+            }
+        }
+        return target;
+    }
+
+    private static List<List<ItemStack>> groupByItem(List<ItemStack> sortedStacks) {
+        List<List<ItemStack>> groups = new ArrayList<>();
+        for (ItemStack stack : sortedStacks) {
+            if (!groups.isEmpty()
+                && groups.get(groups.size() - 1).get(0).getItem() == stack.getItem()) {
+                groups.get(groups.size() - 1).add(stack);
+            } else {
+                List<ItemStack> g = new ArrayList<>();
+                g.add(stack);
+                groups.add(g);
+            }
+        }
+        return groups;
+    }
+
+    private static int[] rowMajorTraversal(Region region) {
+        int n = region.size();
+        int[] result = new int[n];
         for (int i = 0; i < n; i++) {
-            result.add(region.slotStart() + i);
+            result[i] = region.slotStart() + i;
         }
         return result;
     }
 
-    private static List<Integer> verticalLayout(Region region, int n) {
-        List<Integer> result = new ArrayList<>(n);
+    private static int[] columnMajorTraversal(Region region) {
+        int n = region.size();
         int cols = region.cols();
         int rows = region.rows();
+        int[] result = new int[n];
         for (int k = 0; k < n; k++) {
             int row = k % rows;
             int col = k / rows;
-            result.add(region.slotStart() + row * cols + col);
+            result[k] = region.slotStart() + row * cols + col;
         }
         return result;
-    }
-
-    private static List<ItemStack> buildTargetArray(Region region,
-                                                     List<ItemStack> sortedStacks,
-                                                     List<Integer> targetSlots) {
-        List<ItemStack> target = new ArrayList<>(region.size());
-        for (int i = 0; i < region.size(); i++) {
-            target.add(ItemStack.EMPTY);
-        }
-        for (int i = 0; i < sortedStacks.size() && i < targetSlots.size(); i++) {
-            int slot = targetSlots.get(i);
-            target.set(slot - region.slotStart(), sortedStacks.get(i));
-        }
-        return target;
     }
 
     private static List<ClickChain> selectionSort(Region region,

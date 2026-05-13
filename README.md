@@ -10,9 +10,10 @@ sorting is performed entirely client-side via standard slot clicks.
   - **Criterion cycle** — switch between *Name*, *Item type*, *Creative category*,
     *Rarity + Quantity*.
   - **Vertical / Compact / Horizontal** — each click immediately applies its layout
-    with the current criterion. *Compact* preserves the existing order and just
-    fills empty gaps; *Vertical* and *Horizontal* re-arrange the items after sorting
-    by the active criterion.
+    with the current criterion. *Horizontal* groups same-item stacks together row
+    by row with a 1-slot separator between distinct item types; *Vertical* does
+    the same but column by column; *Compact* sorts and packs the stacks
+    contiguously with no separators.
 - Configurable keybind (default `R`) that triggers a sort on the focused
   inventory, or on the player inventory if no screen is open.
 - The player hotbar is preserved by default so the item in hand never moves.

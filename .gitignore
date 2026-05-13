@@ -19,3 +19,16 @@ hs_err_pid*
 
 # Common working directory
 run
+
+# Local screenshots for design review (not for repo)
+*.png
+*.jpg
+*.jpeg
+!src/main/resources/assets/**/*.png
+
+# Ruflo MCP local databases (not for repo)
+ruvector.db
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
