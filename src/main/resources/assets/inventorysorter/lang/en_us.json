@@ -1,0 +1,32 @@
+{
+  "category.inventorysorter.general": "InventorySorter",
+  "key.inventorysorter.sort": "Sort inventory",
+
+  "inventorysorter.criterion.name": "Name",
+  "inventorysorter.criterion.type": "Item type",
+  "inventorysorter.criterion.category": "Creative category",
+  "inventorysorter.criterion.rarity_quantity": "Rarity + quantity",
+
+  "inventorysorter.method.horizontal": "Horizontal",
+  "inventorysorter.method.vertical": "Vertical",
+  "inventorysorter.method.grouped": "Grouped",
+
+  "inventorysorter.button.criterion.title": "Sort by: %s",
+  "inventorysorter.button.criterion.hint": "Click to cycle through criteria",
+  "inventorysorter.button.method.title": "Layout: %s",
+  "inventorysorter.button.method.hint": "Click to cycle through layouts",
+  "inventorysorter.button.sort.title": "Sort now",
+  "inventorysorter.button.sort.hint": "Press the keybind or click to apply the sort.",
+
+  "inventorysorter.config.title": "InventorySorter",
+  "inventorysorter.config.criterion": "Default criterion",
+  "inventorysorter.config.method": "Default layout",
+  "inventorysorter.config.include_hotbar": "Sort the hotbar with the main inventory",
+  "inventorysorter.config.merge_partial_stacks": "Merge partial stacks before sorting",
+  "inventorysorter.config.section.enabled_screens": "Enabled screens",
+  "inventorysorter.config.enabled_screens.player": "Player inventory",
+  "inventorysorter.config.enabled_screens.chest": "Chests, ender chests, barrels",
+  "inventorysorter.config.enabled_screens.shulker": "Shulker boxes",
+  "inventorysorter.config.enabled_screens.hopper": "Hoppers",
+  "inventorysorter.config.enabled_screens.dispenser": "Dispensers and droppers"
+}

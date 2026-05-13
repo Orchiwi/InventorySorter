@@ -1,0 +1,32 @@
+{
+  "category.inventorysorter.general": "InventorySorter",
+  "key.inventorysorter.sort": "Trier l'inventaire",
+
+  "inventorysorter.criterion.name": "Nom",
+  "inventorysorter.criterion.type": "Type d'objet",
+  "inventorysorter.criterion.category": "Catégorie créative",
+  "inventorysorter.criterion.rarity_quantity": "Rareté + quantité",
+
+  "inventorysorter.method.horizontal": "Horizontal",
+  "inventorysorter.method.vertical": "Vertical",
+  "inventorysorter.method.grouped": "Groupé",
+
+  "inventorysorter.button.criterion.title": "Tri : %s",
+  "inventorysorter.button.criterion.hint": "Cliquez pour changer de critère",
+  "inventorysorter.button.method.title": "Disposition : %s",
+  "inventorysorter.button.method.hint": "Cliquez pour changer de disposition",
+  "inventorysorter.button.sort.title": "Trier maintenant",
+  "inventorysorter.button.sort.hint": "Appuyez sur le raccourci ou cliquez pour appliquer le tri.",
+
+  "inventorysorter.config.title": "InventorySorter",
+  "inventorysorter.config.criterion": "Critère par défaut",
+  "inventorysorter.config.method": "Disposition par défaut",
+  "inventorysorter.config.include_hotbar": "Inclure la barre de raccourci dans le tri",
+  "inventorysorter.config.merge_partial_stacks": "Fusionner les piles partielles avant le tri",
+  "inventorysorter.config.section.enabled_screens": "Écrans activés",
+  "inventorysorter.config.enabled_screens.player": "Inventaire du joueur",
+  "inventorysorter.config.enabled_screens.chest": "Coffres, coffres de l'Ender, tonneaux",
+  "inventorysorter.config.enabled_screens.shulker": "Boîtes de Shulker",
+  "inventorysorter.config.enabled_screens.hopper": "Entonnoirs",
+  "inventorysorter.config.enabled_screens.dispenser": "Distributeurs et propulseurs"
+}
